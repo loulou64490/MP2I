@@ -12,3 +12,39 @@ Q1. Cela permet à la fonction de mettre dans le char** l’adresse de
     la mémoire qu’elle a allouée. Si buffer avait été du type char* la
     fonction aurait seulement pu écrire dans la chaine de caractère.
 
+### Exercice 12
+Q1.
+--------
+
+
+
+ @    @
+  @   @
+   @ @
+    @
+   @
+ @@
+--------
+
+Q2.
+note:
+pour i de 0 à n, n n'est pas compris :)
+
+Entrée: caractère à imprimer c
+Choisir le nombre de caractères n à afficher par ligne (9 dans l’exemple)
+Demander à l'utilisateur une chaine p, soit l sa longueur
+pour i de 0 à len/n:
+    pour j de 0 à 8: // par bloc de 8 lignes
+        pour k de 0 à n:
+            Afficher en binaire le j-eme chiffre du fichier associé au caractère p[n*i+k]
+        print \n
+
+
+Fonction: Afficher en binaire le j-eme chiffre du fichier associé au caractère m
+Ouvrir le fichier f associé au caractère m
+Récupérer le j-ème chiffre (avec j lecture de int avec scanf), notons le t
+pour l de 7 à -1:
+    si (t>>l)&1 print c
+    sinon print ' '
+
+Fonction: renvoyer le nom du fichier associé au caractère m

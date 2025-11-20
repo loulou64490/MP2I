@@ -6,7 +6,7 @@ int main(int argc, char** argv)
 {
     FILE* f = fopen(argv[1], "r");
     assert(f!= NULL);
-    char* ligne = nullptr;
+    char* ligne = NULL;
     size_t n = 0; // long unsigned int
     int c = 1;
     size_t len = getline(&ligne, &n, f);

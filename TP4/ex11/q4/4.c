@@ -4,7 +4,7 @@
 
 int ma_getline(char** buffer, int* n, FILE* f)
 {
-    if (*buffer == nullptr)
+    if (*buffer == NULL)
     {
         *n = 30;
         *buffer = malloc(*n * sizeof(char));
@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 {
     FILE* f = fopen(argv[1], "r");
     assert(f!= NULL);
-    char* ligne = nullptr;
+    char* ligne = NULL;
     int n = 0;
     int c = 1;
     int len = ma_getline(&ligne, &n, f);

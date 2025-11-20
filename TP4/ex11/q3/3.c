@@ -32,7 +32,7 @@ int main(int argc, char** argv)
     FILE* w = fopen(argv[2], "w"); //destination
     assert(w!=NULL);
 
-    char* l = nullptr; // ligne
+    char* l = NULL; // ligne
     char* tl[N]; // tableau des pointeurs vers les lignes
 
     int c = 0; // nombre de lignes
@@ -48,7 +48,7 @@ int main(int argc, char** argv)
         tn[c] = n-1; // pour enlever le retour chariot
         tc[c] = c;
         c++;
-        l=nullptr; // j'ai mis du temps à trouver ça :(
+        l=NULL; // j'ai mis du temps à trouver ça :(
         n = getline(&l, &x, r);
     }
     free(l);

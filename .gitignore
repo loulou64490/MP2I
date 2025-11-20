@@ -1,0 +1,110 @@
+# OS-specific junk
+.DS_Store
+Thumbs.db
+
+# Editor & IDE metadata
+*.swp
+*.swo
+*~
+.#*
+
+# Generic temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
+*.rej
+
+# Archives
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+
+# Build directories
+build/
+Build/
+**/cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+Testing/
+Makefile
+compile_commands.json
+*.ninja
+*.ninja_deps
+*.ninja_log
+
+# Compiled objects & libraries
+*.o
+*.obj
+*.a
+*.la
+*.lo
+*.lib
+*.so
+*.dylib
+*.dll
+*.d
+*.mod
+*.mod.c
+*.slo
+
+# Executables & binaries
+*.out
+*.exe
+*.app
+*.run
+*.elf
+*.bin
+
+# LaTeX build artefacts (comment out if needed)
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.dvi
+*.fdb_latexmk
+*.fls
+*.glg
+*.glo
+*.gls
+*.idx
+*.ilg
+*.ind
+*.ist
+*.lof
+*.log
+*.lol
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.nav
+*.snm
+*.vrb
+*.xdv
+indent.log
+texput.log
+# Remove the next line if you want to version generated PDFs
+*.pdf
+
+# minted/Pygments outputs
+_minted*/
+*.minted
+*.data.minted
+*.listing
+*.pygtex
+*.pygstyle
+
+# Misc course artefacts
+TP4/TP4
+
+# System caches
+.cache/
+
+# Valgrind outputs
+vgcore.*

@@ -1,0 +1,36 @@
+## Exercice 2
+Q2. x  y  &&    x  y  ||
+    0  0  0     0  0  0
+    0  1  0     0  1  1
+    1  0  0     1  0  1
+    1  1  1     1  1  1
+
+## Exercice 8
+Q3. Toujours prendre le nombre au milieu de l’intervalle.
+    Exemple : 0-4999 → 2500, si c’est plus haut 2500-4999 → 3750, etc.
+
+## Exercice 11
+Q2. 1. 34
+    2. 4
+    3. 4
+    4. 2
+
+Q3. 1. 1
+    2. 10
+    3. 111
+    4. 18
+    5. 107
+    6. 350
+
+Q4. x, temps de vol
+    1. 9, 19
+    2. 97, 118
+    3. 871, 178
+    4. 6171, 261
+    5. 77031, 350
+    6. 837799, 524
+    7. 8400511, 685
+
+Q5. Environ cinq secondes.
+    Implémenter de la mémoïsation pour ne pas faire plusieurs fois les mêmes calculs.
+    Mais je ne sais pas gérer la mémoire en C…

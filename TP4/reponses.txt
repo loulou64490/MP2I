@@ -1,0 +1,14 @@
+### Exercice 1
+Q1. 4 0 \n respectivement
+Q2. 28 00 00 00
+    0x28 = 40 et les 00 sont les autres octets du type int
+    On a donc un petit boutisme
+
+### Exercice 6
+Q1. argv[0] est le premier argument rentré : l’emplacement du programme
+
+### Exercice 11
+Q1. Cela permet à la fonction de mettre dans le char** l’adresse de
+    la mémoire qu’elle a allouée. Si buffer avait été du type char* la
+    fonction aurait seulement pu écrire dans la chaine de caractère.
+

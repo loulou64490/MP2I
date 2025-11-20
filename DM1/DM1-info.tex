@@ -1,0 +1,112 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Packages de base ---
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{minted} 
+\usepackage{changepage}
+
+% --- Réglages de mise en page ---
+\geometry{margin=2cm}
+\setlength{\parskip}{0em}
+\setlength{\parindent}{0pt}
+\pagestyle{empty} 
+
+
+% Macro pour des sous-puces sur plusieurs colonnes
+\newenvironment{subpuces}[1][1]
+{
+	\begin{multicols}{#1}
+		\begin{enumerate}[label=\alph*), leftmargin=*]
+		}
+		{
+		\end{enumerate}
+	\end{multicols}
+}
+
+\begin{document}
+
+\begin{center}
+	\vspace*{1em}
+	{\Large\bfseries Devoir Maison n°1}\\[0.5em]
+	{Louis Chauvet-Villaret -- MP2I}\\[0.25em]
+	{Jeudi 6 novembre}
+\end{center}
+
+\bigskip
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*, itemsep=1em]
+	\item \begin{subpuces}[4]
+		      \item $110_2=6$
+		      \item $100000_2=32$
+		      \item $100110_2=38$
+		      \item $1111_2=15$
+	      \end{subpuces}
+
+	\item \begin{subpuces}
+		      \item $1\underset{n\ \text{fois}}{\underbrace{0…0}}=2^n$
+		      \item $\underset{n\ \text{fois}}{\underbrace{1…1}}=2^n-1$
+	      \end{subpuces}
+
+	\item \begin{subpuces}
+		      \item $1100001_2$ et $E=\{0,5,6\}$
+		      \item $11111101000_2$ et $E=\{3,5,6,7,8,9,10\}$
+	      \end{subpuces}
+
+	\item $d(n)=\left\{i:\left\lfloor \frac{n}{2^i} \right\rfloor \equiv 1 \pmod{2},\ i\in\mathbb{N}\right\}$
+
+	\item On peut représenter 256 entiers de 0 à 255.
+
+	\item \begin{subpuces}[4]
+		      \item $00000000_2=00_{16}$
+		      \item $00000110_2=06_{16}$
+		      \item $00100000_2=20_{16}$
+		      \item $00100110_2=26_{16}$
+	      \end{subpuces}
+
+	\item \textbf{à Q12.} \
+	      \begin{minted}[frame=single,linenos,fontsize=\small]{c}
+uchar union(uchar n, uchar m) { return n & m; } // union est un mot clé de C...
+uchar intersection(uchar n, uchar m) { return n & m; }
+uchar complementaire(uchar n) { return ~n; }
+bool appartient(uchar n, int i) { return n & 1 << i; }
+uchar ajouter(uchar n, int i) { return n | 1 << i; }
+uchar retirer(uchar n, int i) { return n ^ 1 << i; }
+int cardinal(uchar n) {
+	int c = 0;
+	for (int i = 0; i < 8; i++) c += appartient(n, i);
+	return c;}
+		\end{minted}
+
+	      \setcounter{enumi}{12}
+	\item Le cardinal de $E$ est égal au nombre de bit 1 dans l'écriture binaire de $c(E)$.
+	\item \begin{tabular}[t]{|l|l|l|l|l|l|} \hline
+		      $n$ & $n$ (base 2) & $n-1$ & $n-1$ (base 2) & $n\&(n-1)$ & $n\&(n-1)$ (base 2) \\ \hline
+		      27  & 0001 1011    & 26    & 0001 1010      & 26         & 0001 1010           \\ \hline
+		      160 & 1010 0000    & 159   & 1001 1111      & 128        & 1000 0000           \\ \hline
+		      32  & 0010 0000    & 31    & 0001 1111      & 0          & 0000 0000           \\ \hline
+		      16  & 0001 0000    & 15    & 0000 1111      & 0          & 0000 0000           \\ \hline
+		      47  & 0010 1111    & 46    & 0010 1110      & 46         & 0010 1110           \\ \hline
+		      46  & 0010 1110    & 45    & 0010 1101      & 44         & 0010 1100           \\ \hline
+	      \end{tabular}
+	\item $d(n\&(n-1)) = d(n) \cap d(n-1)$
+	\item
+	      \begin{adjustwidth}{2em}{0pt}
+		      \begin{minted}[frame=single,linenos,fontsize=\small]{c}
+int cardinal(uchar n) {
+	if (n == 0) return 0;
+	return 1 + cardinal(intersection(n, n - 1));}
+	\end{minted}
+	      \end{adjustwidth}
+	\item Dans l'implémentation naïve on effectue toujours 32 opérations (8 tours de boucle et 4 opérations par tour en comptant \texttt{i++}), alors que dans la deuxième on effectue au plus 24 opérations (3 opérations par \texttt{return} et au maximum 8 return si le cardinal vaut 8). Cette dernière est donc plus efficace lorsque l'on compare le nombre d'opération.
+\end{enumerate}
+
+\end{document}

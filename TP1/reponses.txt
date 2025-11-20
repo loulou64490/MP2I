@@ -1,0 +1,23 @@
+# TP 1
+
+### Exercice 20
+
+Q1. Nous sommes en 2025, ce qui représente environ en secondes
+    55 ans * 365 jours * 24 heures * 60 minutes * 60 secondes = 1 734 480 000
+    Ce qui est assez proche de 2³¹-1, mais encore inférieur.
+    On suppose qu'une année vaut approximativement 365*24*3600 secondes, on pose
+    (2³¹-1)/365*24*3600 =~ 68 ans
+    Donc en 2038 il risque d'avoir un léger overflow (aïe).
+
+Q2. Bon, avec 2⁶³-1 secondes, on a environ 292 471 208 678 ans devant nous pour
+    trouver une nouvelle solution (on a le temps quoi).
+
+### Exercice 21
+
+Q1. La fonction rand() génère un nombre aléatoire.
+
+Q2. Chaque seconde la seed change, donc durant une seconde la suite de génèration
+    est identique si l'on exécute plusieurs fois programme.
+
+Q3. Il génère toujours les mêmes nombres aléatoires.
+

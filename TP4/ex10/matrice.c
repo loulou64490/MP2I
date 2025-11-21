@@ -74,7 +74,7 @@ int** somme_mat(int** g1, int** g2, int n, int m)
         }
     }
     return g;
-};
+}
 
 /* renvoie le produit de la matrice g1 (n×p) avec la matrice g2 (p×m) */
 int** produit_mat(int** g1, int** g2, int n, int p, int m)

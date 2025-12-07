@@ -1,0 +1,64 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Packages de base ---
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{minted} 
+\usepackage{changepage}
+
+% --- Réglages de mise en page ---
+\geometry{margin=2.5cm}
+\setlength{\parskip}{0em}
+\setlength{\parindent}{0pt}
+\pagestyle{empty} 
+
+\begin{document}
+
+\bigskip\bigskip
+
+\begin{center}
+	{\Large\bfseries Devoir Maison n°2}\\[1em]
+	{Louis Chauvet-Villaret -- MP2I}\\[0.5em]
+	{Samedi 3 janvier}
+\end{center}
+
+\bigskip\bigskip
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*, itemsep=1em]
+	\item $ (U_i)_{i \in \mathbb{N}} = A\sin(2\pi ff_{ech}i) $
+	      \setcounter{enumi}{2}
+	\item \begin{minted}[frame=single,fontsize=\small]{text}
+000000 52 49 46 46 2a 00 00 00 57 41 56 45 66 6d 74 20
+000010 10 00 00 00 01 00 01 00 44 ac 00 00 88 58 01 00
+000020 02 00 10 00 64 61 74 61 06 00 00 00 1b 3c 2f 03
+000030 3f e7
+		\end{minted}
+
+	\item \begin{minted}[frame=single,fontsize=\small]{text}
+000000 52 49 46 46 2e 00 00 00 57 41 56 45 66 6d 74 20
+000010 10 00 00 00 01 00 01 00 22 56 00 00 44 ac 00 00
+000020 02 00 10 00 64 61 74 61 0a 00 00 00 d2 03 5e 06
+000030 ff ff a2 f9 ff 7f
+		\end{minted}
+
+
+
+	      %	       \setcounter{enumi}{12}
+	      %	       \texttt{}
+
+
+	      %		      \begin{minted}[frame=single,linenos,fontsize=\small]{c}
+	      %			\end{minted}
+
+
+\end{enumerate}
+
+\end{document}

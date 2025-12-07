@@ -1,0 +1,21 @@
+5
+1
+Tu te réveilles sur un lit plutot confortable, tu sens que tu as bien dormi.
+Regarder autour de toi.
+1
+3
+Tu es dans une hutte. Un chat te regarde d’un air malicieux. Il y a une table au centre de la pièce avec une carte dessus. Un coffre se trouve sous le lit.
+Caresser le chat.
+2
+Regarder la carte.
+3
+Ouvrir le coffre.
+4
+0
+Tu tentes de caresser le chat, mais ce dernier te saute à la gorge et te mord. Le chat a bien frappé et tu te vides de ton sang. Tu es mort.
+1
+La carte indique l’emplacement d'un donjons, et mentionne un livre avec d’étranges runes.
+Prendre la carte.
+4
+0
+Vous partez à l'aventure !

@@ -1,2 +1,13 @@
 ### Exercice 1
-Q1. 
+Q1. 50 + 50 + 4 + 4 = 108 octets
+
+### Exercice 2
+Q4. Un float est une approximation donc sa valeur peut être inexacte. 
+    Il vaut mieux stocker un entier et le diviser par 100.
+    
+### Exercice 3
+Q4. Si les deux equipes partagent des pointeurs communs, lors que l’on
+    libérera de la mémoire une équipe, on ne pourra pas afficher l’autre,
+    car les étudiants n’existeront plus dans la mémoire. Ce qui nous amènera
+    aussi à libérer deux fois la même adresse...
+

@@ -2,6 +2,9 @@
 .DS_Store
 Thumbs.db
 
+# Random
+*.wav
+
 # Editor & IDE metadata
 *.swp
 *.swo

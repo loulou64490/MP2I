@@ -198,8 +198,8 @@ void test3()
 
 int main()
 {
-    //srand(time(nullptr));
-    //test1();
-    //test2();
-    //test3();
+    srand(time(NULL));
+    test1();
+    test2();
+    test3();
 }

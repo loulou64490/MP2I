@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Gestion de l'option -v (doit être le premier argument pour être pris en compte par le script)
-USE_VALGRIND=true
+USE_VALGRIND=false
 
 if [ "$1" == "-v" ]; then
-    USE_VALGRIND=false
+    USE_VALGRIND=true
     shift # On retire -v des arguments
 fi
 
@@ -45,8 +45,14 @@ FIRST_SOURCE="${SOURCES[0]}"
 OUTPUT_BIN="${FIRST_SOURCE%.c}"
 
 # 1. Compilation
-# gcc fichier.c -o fichier -Wall -Wextra -O0 -g3 -lm
-gcc "${SOURCES[@]}" -o "$OUTPUT_BIN" -Wall -Wextra -O0 -g3 -lm
+if [ "$USE_VALGRIND" = true ]; then
+    # Sans sanitizers (Valgrind activé avec -v)
+    clang "${SOURCES[@]}" -o "$OUTPUT_BIN" -Wall -Wextra -Wshadow -O0 -g3 -lm
+else
+    # Avec sanitizers (Valgrind désactivé)
+    clang "${SOURCES[@]}" -o "$OUTPUT_BIN" -Wall -Wextra -Wshadow -O0 -g3 -fsanitize=address,leak,undefined -lm
+fi
+
 
 # Si la compilation échoue, on arrête tout
 if [ $? -ne 0 ]; then
@@ -56,9 +62,9 @@ fi
 
 # 2. Exécution
 if [ "$USE_VALGRIND" = true ]; then
-    # Avec Valgrind
+    # Avec Valgrind (si option -v présente)
     valgrind --quiet --leak-check=full --track-origins=yes --show-leak-kinds=all "./$OUTPUT_BIN" "${ARGS[@]}"
 else
-    # Sans Valgrind (si option -v présente)
+    # Sans Valgrind
     "./$OUTPUT_BIN" "${ARGS[@]}"
 fi

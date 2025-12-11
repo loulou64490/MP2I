@@ -1,9 +1,11 @@
 #include <stdlib.h>
+#include <time.h>
 #include "sound.h"
 #include "wav.h"
 #include "waveform.h"
 #include "melody.h"
 
+/*
 void test_8()
 {
     int16_t d[3] = {15387, 815, -6337};
@@ -81,12 +83,45 @@ void test_15()
     fclose(f);
 }
 
-int main(void)
+void test_19()
 {
-    // test_8();
-    // test_9();
-    // test_10();
-    // test_11();
-    // test_13();
+    mix_t* m = load_mix("../archive/question_19/test1.txt");
+    sound_t* s = reduce_mix(m);
+    save_sound("sound/sonata2.wav", s);
+    free_s(s);
+    free_m(m);
+}
+
+void test()
+{
+    test_8();
+    test_9();
+    test_10();
+    test_11();
+    test_13();
     test_15();
+    test_19();
+}
+*/
+
+int main(int argc, char** argv)
+{
+    // test();
+
+    if (argc != 3)
+    {
+        fprintf(stderr, "Erreur : vous devez indiquer le fichier d'entrée et de sortie !");
+        return 1;
+    }
+    long t = clock();
+    mix_t* m = load_mix(argv[1]);
+    sound_t* s = reduce_mix(m);
+    save_sound(argv[2], s);
+
+    int d = s->n_samples / fe;
+    printf("Fichier %s généré (temps écoulé: %.2fs)\n", argv[2], (double)(clock() - t) / CLOCKS_PER_SEC);
+    printf("Durée du fichier: %dm%ds (taille %.1fMo)", d / 60, d % 60, (double)s->n_samples / 500000);
+
+    free_s(s);
+    free_m(m);
 }

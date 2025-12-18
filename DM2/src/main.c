@@ -2,126 +2,62 @@
 #include <time.h>
 #include "sound.h"
 #include "wav.h"
-#include "waveform.h"
 #include "melody.h"
+#include "test.h"
 
 /*
-void test_8()
-{
-    int16_t d[3] = {15387, 815, -6337};
-    sound_t s = {
-        .n_samples = 3,
-        .samples = d
-    };
+bon, j’ai pris quelques libertés…
 
-    save_sound("sound/test.wav", &s);
-}
+j’ai voulu tester le typage et ne pas faire de conversion implicite,
+(entre autre pour que mon CLion arrete de me harceler)
+j’ai changé les types int en unsigned, et les float en double (pour la précision)
+je ne sais pas si c’est forcément très utiles et judicieux,
+mais le programme compile avec -Wconversion :D,
+j’ai aussi remplacé int16_t par short (c'est la même chose)
 
-void test_9()
-{
-    sound_t* s = white(Te, fe);
-    save_sound("sound/white.wav", s);
-    free_s(s);
-}
+j’ai écrit de base les variables avec des courts noms, mais c’était vraiment illisible,
+du coup, je les ai toutes renommées, je pense que c’est un peu plus lisible,
+comme il y avait des variables et des fonctions en anglais, j’ai tout écrit en anglais...
 
-void test_10()
-{
-    sound_t* s = sine(ff, Ae, Te, fe);
-    save_sound("sound/sine.wav", s);
-    free_s(s);
-}
+pour compiler et exécuter rapidement j'utilise un petit script que j'ai dans mon path
+et que j'ai inclus dans le projet.
+pour exécuter les test:
+> mx main.c sound.c wav.c waveform.c melody.c test.c
 
-void test_11()
-{
-    sound_t* s = square(ff, Ae, Te, fe);
-    save_sound("sound/square.wav", s);
-    free_s(s);
-    s = triangle(ff, Ae, Te, fe);
-    save_sound("sound/triangle.wav", s);
-    free_s(s);
-    s = sawtooth(ff, Ae, Te, fe);
-    save_sound("sound/sawtooth.wav", s);
-    free_s(s);
-}
+sinon pour exécuter avec des argument :
+> mx main.c sound.c wav.c waveform.c melody.c test.c ../archive/question_19/test5.txt sound/test5.wav
+par exemple
 
-void test_13()
-{
-    sound_t* s1 = sine(440, 0, 0.5, fe);
-    sound_t* s2 = sine(440, 16000, 0.4, fe);
-    sound_t* s3 = sine(440, 0, 0.1, fe);
-    sound_t* s4 = sine(440, 16000, 0.4, fe);
-    sound_t* s5 = sine(440, 0, 0.1, fe);
-    sound_t* s6 = sine(440, 16000, 0.5, fe);
-    sound_t* s7 = sine(493.88, 16000, 0.5, fe);
-    sound_t* s8 = sine(554.36, 16000, 1, fe);
-    sound_t* s9 = sine(493.88, 16000, 1, fe);
+je suis passé vers clang pour utiliser les sanitizer, très pratiques
+et bien plus rapides que valgrind
 
-    sound_t* st[9] = {s1, s2, s3, s4, s5, s6, s7, s8, s9};
-    track_t t = {
-        .n_sounds = 9,
-        .sounds = st
-    };
-    sound_t* s = reduce_track(&t);
-    save_sound("sound/clair.wav", s);
-
-    for (int i = 0; i < 9; ++i)
-    {
-        free_s(st[i]);
-    }
-    free(s->samples);
-    free(s);
-}
-
-void test_15()
-{
-    FILE* f = fopen("../archive/question_15/sonata_une_piste.txt", "r");
-    track_t* t = read_track(f);
-    sound_t* s = reduce_track(t);
-    save_sound("sound/sonata.wav", s);
-    free_s(s);
-    free_t(t);
-    fclose(f);
-}
-
-void test_19()
-{
-    mix_t* m = load_mix("../archive/question_19/test1.txt");
-    sound_t* s = reduce_mix(m);
-    save_sound("sound/sonata2.wav", s);
-    free_s(s);
-    free_m(m);
-}
-
-void test()
-{
-    test_8();
-    test_9();
-    test_10();
-    test_11();
-    test_13();
-    test_15();
-    test_19();
-}
+je remarque qu'il y a une réelle augmentation des performances
+en exécutant avec les optimisations
+> clang main.c sound.c wav.c waveform.c melody.c test.c -o main -lm -O3 -ffast-math
+je passe de 0.71s à 0.25 pour test5.txt
 */
 
 int main(int argc, char** argv)
 {
-    // test();
-
     if (argc != 3)
     {
-        fprintf(stderr, "Erreur : vous devez indiquer le fichier d'entrée et de sortie !");
-        return 1;
+        test();
+        printf("Test générés !");
+        return 0;
     }
-    long t = clock();
-    mix_t* m = load_mix(argv[1]);
-    sound_t* s = reduce_mix(m);
-    save_sound(argv[2], s);
 
-    int d = s->n_samples / fe;
-    printf("Fichier %s généré (temps écoulé: %.2fs)\n", argv[2], (double)(clock() - t) / CLOCKS_PER_SEC);
-    printf("Durée du fichier: %dm%ds (taille %.1fMo)", d / 60, d % 60, (double)s->n_samples / 500000);
+    long time = clock();
 
-    free_s(s);
-    free_m(m);
+    // génération du son
+    mix_t* mix = load_mix(argv[1]);
+    sound_t* sound = reduce_mix(mix);
+    save_sound(argv[2], sound);
+
+    unsigned length = sound->n_samples / SAMPLE_RATE;
+    printf("Fichier %s généré (temps écoulé: %.2fs)\n", argv[2], (double)(clock() - time) / CLOCKS_PER_SEC);
+    printf("Durée du fichier: %um%us (taille %.1fMo)", length / 60, length % 60, (double)sound->n_samples / 500000);
+    // taille en Mo: (n_samples * 16 bits) / (8 bits * 1000000) = n_samples / 500000
+
+    free_sound(sound);
+    free_mix(mix);
 }

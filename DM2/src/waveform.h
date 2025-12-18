@@ -1,19 +1,17 @@
 #pragma once
 #include "sound.h"
 
-/* génère un bruit blanc de durée T (en secondes) et de fréquence d’échantillonnage f_ech */
-sound_t* white(float T, int f_ech);
+/* génère un bruit blanc */
+sound_t* white(double length, unsigned sample_rate);
 
-/* renvoie un son sinusoïdal de fréquence f, d'amplitude A, de durée T (en secondes)
- * et de fréquence d’échantillonnage f_ech
- */
-sound_t* sine(float f, int A, float T, int f_ech);
+/* renvoie un son sinusoïdal de fréquence */
+sound_t* sine(double frequency, double amplitude, double length, unsigned sample_rate);
 
 /* renvoie un son en créneaux */
-sound_t* square(float f, int A, float T, int f_ech);
+sound_t* square(double frequency, double amplitude, double length, unsigned sample_rate);
 
 /* renvoie un son en triangle */
-sound_t* triangle(float f, int A, float T, int f_ech);
+sound_t* triangle(double frequency, double amplitude, double length, unsigned sample_rate);
 
 /* renvoie un son en dent de scie */
-sound_t* sawtooth(float f, int A, float T, int f_ech);
+sound_t* sawtooth(double frequency, double amplitude, double length, unsigned sample_rate);

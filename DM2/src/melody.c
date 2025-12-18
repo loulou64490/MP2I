@@ -9,63 +9,71 @@
 #include <stdlib.h>
 #include <string.h>
 
-float pitch_to_freq(int n) { return 440 * pow(2, (float)n / 12); }
+double pitch_to_freq(int pitch) { return 440 * pow(2, (double)pitch / 12); }
 
-track_t* read_track(FILE* f)
+track_t* read_track(FILE* file)
 {
-    track_t* t = malloc(sizeof(track_t));
-    char sg[9];
-    fscanf(f, "%d %8s", &t->n_sounds, sg);
-    int s = 0;
-    if (strcmp(sg, "square") == 0) s = 1;
-    if (strcmp(sg, "triangle") == 0) s = 2;
-    if (strcmp(sg, "sawtooth") == 0) s = 3;
-    t->sounds = malloc(t->n_sounds * sizeof(sound_t*));
-    int n; // hauteur
-    float d, v; // volume durée
-    for (int i = 0; i < t->n_sounds; ++i)
+    track_t* track = malloc(sizeof(track_t));
+
+    char str_signal[9]; // pour récupérer le nom du signal
+    fscanf(file, "%u %8s", &track->n_sounds, str_signal);
+    unsigned signal = 0;
+    if (strcmp(str_signal, "square") == 0) signal = 1;
+    if (strcmp(str_signal, "triangle") == 0) signal = 2;
+    if (strcmp(str_signal, "sawtooth") == 0) signal = 3;
+
+    track->sounds = malloc(track->n_sounds * sizeof(sound_t*));
+    int pitch;
+    double length, volume;
+    for (unsigned i = 0; i < track->n_sounds; ++i)
     {
-        fscanf(f, "%d %f %f", &n, &d, &v);
-        switch (s)
+        fscanf(file, "%d %lf %lf", &pitch, &length, &volume);
+
+        // j’ai vu qu’il existait des macros pour simplifier ce genre de if... mais c’est vraiment hors-programme
+        if (signal == 1)
         {
-        case 0:
-        default:
-            t->sounds[i] = sine(pitch_to_freq(n), v * Ae, d, fe);
-            break;
-        case 1:
-            t->sounds[i] = square(pitch_to_freq(n), v * Ae, d, fe);
-            break;
-        case 2:
-            t->sounds[i] = triangle(pitch_to_freq(n), v * Ae, d, fe);
-            break;
-        case 3:
-            t->sounds[i] = sawtooth(pitch_to_freq(n), v * Ae, d, fe);
-            break;
+            track->sounds[i] = square(pitch_to_freq(pitch), volume * DEFAULT_AMPLITUDE, length,
+                                      SAMPLE_RATE);
+        }
+        else if (signal == 2)
+        {
+            track->sounds[i] = triangle(pitch_to_freq(pitch), volume * DEFAULT_AMPLITUDE, length,
+                                        SAMPLE_RATE);
+        }
+        else if (signal == 3)
+        {
+            track->sounds[i] = sawtooth(pitch_to_freq(pitch), volume * DEFAULT_AMPLITUDE, length,
+                                        SAMPLE_RATE);
+        }
+        else
+        {
+            track->sounds[i] = sine(pitch_to_freq(pitch), volume * DEFAULT_AMPLITUDE, length,
+                                    SAMPLE_RATE);
         }
     }
-    return t;
+    return track;
 }
 
 mix_t* load_mix(char* filename)
 {
-    mix_t* m = malloc(sizeof(mix_t));
+    mix_t* mix = malloc(sizeof(mix_t));
     FILE* f = fopen(filename, "r");
     if (!f)
     {
         fprintf(stderr, "Erreur : le fichier %s n'existe pas !\n", filename);
         exit(EXIT_FAILURE);
     }
-    fscanf(f, "%d", &m->n_tracks);
-    m->vols = malloc(m->n_tracks * sizeof(float));
-    for (int i = 0; i < m->n_tracks; ++i)
+    fscanf(f, "%d", &mix->n_tracks);
+    mix->vols = malloc(mix->n_tracks * sizeof(double));
+    for (unsigned i = 0; i < mix->n_tracks; ++i)
     {
-        fscanf(f, "%f", &m->vols[i]);
+        fscanf(f, "%lf", &mix->vols[i]);
     }
-    m->tracks = malloc(m->n_tracks * sizeof(track_t*));
-    for (int i = 0; i < m->n_tracks; ++i)
+    mix->tracks = malloc(mix->n_tracks * sizeof(track_t*));
+    for (unsigned i = 0; i < mix->n_tracks; ++i)
     {
-        m->tracks[i] = read_track(f);
+        mix->tracks[i] = read_track(f);
     }
     fclose(f);
-    return m;
+    return mix;
 }

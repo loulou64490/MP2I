@@ -47,10 +47,10 @@ OUTPUT_BIN="${FIRST_SOURCE%.c}"
 # 1. Compilation
 if [ "$USE_VALGRIND" = true ]; then
     # Sans sanitizers (Valgrind activé avec -v)
-    clang "${SOURCES[@]}" -o "$OUTPUT_BIN" -Wall -Wextra -Wshadow -O0 -g3 -lm
+    clang "${SOURCES[@]}" -o "$OUTPUT_BIN" -Wall -Wextra -O0 -g3 -lm
 else
     # Avec sanitizers (Valgrind désactivé)
-    clang "${SOURCES[@]}" -o "$OUTPUT_BIN" -Wall -Wextra -Wshadow -O0 -g3 -fsanitize=address,leak,undefined -lm
+    clang "${SOURCES[@]}" -o "$OUTPUT_BIN" -Wall -Wextra -O0 -g3 -fsanitize=address,undefined -lm
 fi
 
 

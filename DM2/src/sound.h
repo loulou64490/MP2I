@@ -1,39 +1,41 @@
 #pragma once
-#include <stdint.h>
 
-static const int L = 16, fe = 44100, Ae = 16000;
-static const float Te = 5, ff = 440;
+extern const unsigned BITS;
+extern const unsigned SAMPLE_RATE;
+extern const double DEFAULT_LENGTH;
+extern const double DEFAULT_FREQUENCY;
+extern const double DEFAULT_AMPLITUDE;
 
 typedef struct sound
 {
-    int n_samples; // nombre d'échantillons
-    int16_t* samples; // tableau des échantillons
+    unsigned n_samples; // nombre d'échantillons
+    short* samples; // tableau des échantillons
 } sound_t;
 
 /*libère un élément sound_t* */
-void free_s(sound_t* s);
+void free_sound(sound_t* sound);
 
 typedef struct track
 {
-    int n_sounds; // nombre de son dans la piste
+    unsigned n_sounds; // nombre de son dans la piste
     sound_t** sounds; // liste des sons
 } track_t;
 
 /*libère un élément track_t* */
-void free_t(track_t* t);
+void free_track(track_t* track);
 
 /* transforme une piste en un unique son */
-sound_t* reduce_track(track_t* t);
+sound_t* reduce_track(track_t* track);
 
 typedef struct mix
 {
-    int n_tracks; // nombre de pistes
+    unsigned n_tracks; // nombre de pistes
     track_t** tracks; // liste des pistes
-    float* vols; // liste des volumes des pistes
+    double* vols; // liste des volumes des pistes
 } mix_t;
 
 /*libère un élément mix_t* */
-void free_m(mix_t* m);
+void free_mix(mix_t* mix);
 
 /* transforme un mix en son */
-sound_t* reduce_mix(mix_t* m);
+sound_t* reduce_mix(mix_t* mix);

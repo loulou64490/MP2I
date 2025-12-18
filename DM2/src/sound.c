@@ -3,93 +3,98 @@
 
 #include "wav.h"
 
+const unsigned BITS = 16, SAMPLE_RATE = 44100;
+const double DEFAULT_LENGTH = 5, DEFAULT_FREQUENCY = 440, DEFAULT_AMPLITUDE = 16000;
 
-void free_s(sound_t* s)
+void free_sound(sound_t* sound)
 {
-    free(s->samples);
-    free(s);
+    free(sound->samples);
+    free(sound);
 }
 
-void free_t(track_t* t)
+void free_track(track_t* track)
 {
-    for (int i = 0; i < t->n_sounds; ++i)
+    for (unsigned i = 0; i < track->n_sounds; ++i)
     {
-        free_s(t->sounds[i]);
+        free_sound(track->sounds[i]);
     }
-    free(t->sounds);
-    free(t);
+    free(track->sounds); // à chaque fois je les oublie...
+    free(track);
 }
 
-sound_t* reduce_track(track_t* t)
+sound_t* reduce_track(track_t* track)
 {
-    sound_t* s = malloc(sizeof(track_t));
+    sound_t* s = malloc(sizeof(sound_t));
     s->n_samples = 0;
-    int n = 1 << 16;
-    s->samples = malloc(n * sizeof(int16_t));
-    for (int i = 0; i < t->n_sounds; ++i)
+    unsigned n = 1 << 8;
+    s->samples = malloc(n * sizeof(short));
+    for (unsigned i = 0; i < track->n_sounds; ++i)
     {
-        const int ns = t->sounds[i]->n_samples;
-        while (s->n_samples + ns > n)
+        unsigned n_samples = track->sounds[i]->n_samples;
+        if (s->n_samples + n_samples > n)
         {
-            s->samples = realloc(s->samples, (n *= 2) * sizeof(int16_t));
+            while (s->n_samples + n_samples > n) n *= 2; // au cas où plus du double est nécéssaire
+            s->samples = realloc(s->samples, n * sizeof(short));
         }
-        for (int j = 0; j < ns; ++j)
+        for (unsigned j = 0; j < n_samples; ++j)
         {
-            s->samples[s->n_samples + j] = t->sounds[i]->samples[j];
+            s->samples[s->n_samples + j] = track->sounds[i]->samples[j];
         }
-        s->n_samples += ns;
+        s->n_samples += n_samples;
     }
-    s->samples = realloc(s->samples, s->n_samples * sizeof(int16_t)); // pour ne pas utiliser trop de mémoire
+    s->samples = realloc(s->samples, s->n_samples * sizeof(short)); // pour ne pas utiliser trop de mémoire
     return s;
 }
 
-void free_m(mix_t* m)
+void free_mix(mix_t* mix)
 {
-    for (int i = 0; i < m->n_tracks; ++i)
+    for (unsigned i = 0; i < mix->n_tracks; ++i)
     {
-        free_t(m->tracks[i]);
+        free_track(mix->tracks[i]);
     }
-    free(m->tracks);
-    free(m->vols);
-    free(m);
+    free(mix->tracks); // :)
+    free(mix->vols);
+    free(mix);
 }
 
-sound_t* reduce_mix(mix_t* m)
+sound_t* reduce_mix(mix_t* mix)
 {
     // générer chaque tracks
-    sound_t** ls = malloc(m->n_tracks * sizeof(sound_t*));
-    int me = 0; // nombre d'échantillons maximum
-    float sv = 0; // somme des volumes
-    for (int i = 0; i < m->n_tracks; ++i)
+    sound_t** sound_list = malloc(mix->n_tracks * sizeof(sound_t*));
+    unsigned samp_max = 0; // nombre d'échantillons maximum
+    double vol_sum = 0; // somme des volumes
+    for (unsigned i = 0; i < mix->n_tracks; ++i)
     {
-        sv += m->vols[i];
-        ls[i] = reduce_track(m->tracks[i]);
-        if (ls[i]->n_samples > me) me = ls[i]->n_samples;
+        vol_sum += mix->vols[i];
+        sound_list[i] = reduce_track(mix->tracks[i]);
+        if (sound_list[i]->n_samples > samp_max) samp_max = sound_list[i]->n_samples;
     }
+
+    if (vol_sum == 0) vol_sum = 1; // pour éviter de diviser par 0 ???
 
     // sound à renvoyer
-    sound_t* s = malloc(sizeof(sound_t));
-    s->n_samples = me;
-    s->samples = malloc(me * sizeof(int16_t));
-    for (int i = 0; i < me; ++i)
+    sound_t* sound = malloc(sizeof(sound_t));
+    sound->n_samples = samp_max;
+    sound->samples = malloc(samp_max * sizeof(short));
+    for (unsigned i = 0; i < samp_max; ++i)
     {
-        float se = 0; // somme des échantillons
+        double sample_sum = 0;
         // j'utilise un float et pas int car les volumes
         // sont des floats non?
-        for (int j = 0; j < m->n_tracks; ++j)
+        for (unsigned j = 0; j < mix->n_tracks; ++j)
         {
-            if (ls[j]->n_samples > i)
-                se += ls[j]->samples[i] * m->vols[j]; // valeur pondérée par le volume
+            if (sound_list[j]->n_samples > i)
+                sample_sum += sound_list[j]->samples[i] * mix->vols[j]; // valeur pondérée par le volume
         }
-        s->samples[i] = se / sv; // moyenne
+        sound->samples[i] = (short)(sample_sum / vol_sum); // moyenne
     }
 
-    // libérer ls
-    for (int i = 0; i < m->n_tracks; ++i)
+    // libérer liste_sound
+    for (unsigned i = 0; i < mix->n_tracks; ++i)
     {
-        free_s(ls[i]);
+        free_sound(sound_list[i]);
     }
-    free(ls);
+    free(sound_list);
 
-    return s;
+    return sound;
 }

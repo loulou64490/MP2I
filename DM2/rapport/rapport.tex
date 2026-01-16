@@ -1,0 +1,70 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Packages de base ---
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{minted} 
+\usepackage{changepage}
+
+% --- Réglages de mise en page ---
+\geometry{margin=2.5cm}
+\setlength{\parskip}{0em}
+\setlength{\parindent}{0pt}
+\pagestyle{empty} 
+
+\begin{document}
+
+\bigskip\bigskip
+
+\begin{center}
+	{\Large\bfseries Devoir Maison n°2}\\[1em]
+	{Louis Chauvet-Villaret -- MP2I}\\[0.5em]
+	{Samedi 3 janvier}
+\end{center}
+
+\bigskip\bigskip
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*, itemsep=1em]
+	\item $ (U_i)_{i \in \mathbb{N}} = A\sin\left(\frac{2\pi fi}{f_{ech}}\right) $
+	      \setcounter{enumi}{2}
+	\item \begin{minted}[fontsize=\small]{text}
+000000 52 49 46 46 2e 00 00 00 57 41 56 45 66 6d 74 20
+000010 10 00 00 00 01 00 01 00 22 56 00 00 44 ac 00 00
+000020 02 00 10 00 64 61 74 61 0a 00 00 00 d2 03 5e 06
+000030 ff ff a2 f9 ff 7f
+		\end{minted}
+	      \setcounter{enumi}{17}
+	\item En notant $l_m=\max\{l_1,...l_n\}$, j'ai 2 boucles de $n$ tours et une
+	boucle qui s'apparente à $l_m \times n$ tours donc ma fonction est de complexité $O\left(n(l_m+2)\right)$.
+	
+	\section*{Fonctionnalité additionnelle}
+	
+	J'ai tenté d'implémenter un système d'enveloppe ADSR. Une enveloppe ADSR décrit pour chaque note l'attack (durée pour atteindre le niveau maximal), le decay (durée pour redescendre au sustain), le sustain (volume de la note) et release (durée de la diminution du niveau, lorsque la note est terminée)
+	
+	Le sustain étant déjà défini par le volume de la note, il ne me restait plus qu'à définir l'attaque, le decay et le release. 
+	
+	Je n'avais pas réalisé que c'est un problème complexe: le release ne faisant pas partie de la longueur de la note, il faut fusionné le release de chaque note avec les notes suivantes. 
+	
+	Faire une simple addition entraine forcément un overflow : si les notes sont plus courtes que les releases, ils vont s'additionner et le son va saturer.
+	
+	Je me suis donc dit qu'il fallait faire une moyenne des sons pour chaque release comme lorsqu'on fusionne les tracks. Sauf que faire une moyenne divise notre son par le nombre de release (donc le nombre de note) et à force de diviser, on perd beaucoup de signal.
+	
+	En me renseignant un peu plus, j'ai appris que les logiciels de MAO utilisait un système de buffer qui additione les différents signaux (notes, releases) puis normalise le son à la fin pour éviter les overflows ou un son trop fort. 
+	
+	La ça devenait beaucoup trop compliqué donc j'ai un abandonné et j'ai intégré le release à la durée de la note. Ainsi, si le release est supérieur à la durée de la note, il n'y a pas de son du tout, m'obligeant donc à définir des releases très court.
+	
+	
+	Pour cela, j'ai fusionné les différentes fonctions de waveform en une unique qui s'apelle \texttt{sample()} et qui me renvoie la valeur du son d'un i-ième sample, pour pouvoir l'utiliser plusieurs fois dans une autre fonction \texttt{waveform()} qui me génère une note avec l'enveloppe. J'ai juste eu à simplement adapter \texttt{read\_track()} pour \texttt{waveform()} et le \texttt{main()} pour changer l'attack, le decay et le release par défaut.
+
+
+\end{enumerate}
+
+\end{document}

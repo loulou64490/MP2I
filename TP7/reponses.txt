@@ -1,0 +1,9 @@
+Q10.  aeA
+Q11. 
+empiler p[0]
+pour i de 1 à n-1:
+  si p[i] réagit avec le sommet de la pile:
+    dépiler
+  sinon:
+    empiler p[i]
+  

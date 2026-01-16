@@ -2,16 +2,15 @@
 #include "sound.h"
 
 /* génère un bruit blanc */
-sound_t* white(double length, unsigned sample_rate);
+sound_t *white(double length, unsigned sample_rate);
 
-/* renvoie un son sinusoïdal de fréquence */
-sound_t* sine(double frequency, double amplitude, double length, unsigned sample_rate);
+/* génère un unique sample */
+short sample(char signal, double frequency, unsigned sample_rate,
+             double amplitude, double omega, unsigned i);
 
-/* renvoie un son en créneaux */
-sound_t* square(double frequency, double amplitude, double length, unsigned sample_rate);
-
-/* renvoie un son en triangle */
-sound_t* triangle(double frequency, double amplitude, double length, unsigned sample_rate);
-
-/* renvoie un son en dent de scie */
-sound_t* sawtooth(double frequency, double amplitude, double length, unsigned sample_rate);
+/* génère un son
+ * signal: 0 blanc, default 1 sinusoïdal, 2 créneaux, 3 triangle, 4 dent de scie
+ */
+sound_t *waveform(char signal, double frequency, double length,
+                  unsigned sample_rate, double attack, double decay,
+                  double sustain, double release);
